@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玩家档案</title>
+    <style>
+        body {
+            background: #0b0d10;
+            color: #eaeef2;
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #14171c;
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid #2a2f36;
+        }
+
+        .back-link {
+            color: #6c8cff;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+            .back-link:hover {
+                text-decoration: underline;
+            }
+
+        h1 {
+            font-weight: 500;
+            color: #f0f4fa;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #242a32;
+        }
+
+            .info-item .label {
+                color: #9aa4b2;
+            }
+
+            .info-item .value {
+                color: #eaeef2;
+                font-weight: 500;
+            }
+
+        .loading, .error {
+            color: #9aa4b2;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .error {
+            color: #f28b8b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← 返回首页</a>
+        <h1 id="playerName">👤 玩家档案</h1>
+        <div id="playerInfo">
+            <div class="loading">⏳ 加载中...</div>
+        </div>
+    </div>
+
+    <script>
+        function getPlayerNameFromPath() {
+            const path = window.location.pathname;
+            // 匹配 /player/ 后面的部分，忽略 index.html 和查询参数
+            const match = path.match(/^\/player\/(.+?)(?:\?|$)/);
+            if (match && match[1] && match[1] !== 'index.html') {
+                return decodeURIComponent(match[1]);
+            }
+            // 兼容旧方式：如果 URL 是 /player/index.html?player=xxx
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('player')) {
+                return params.get('player');
+            }
+            return null;
+        }
+
+        const playerName = getPlayerNameFromPath() || '未知玩家';
+        document.getElementById('playerName').textContent = `👤 ${playerName}`;
+
+        // ⚠️ 替换为你的真实 API 地址
+        const API_BASE = 'https://api.cnolm.dpdns.org';
+        async function fetchPlayerData() {
+    const infoContainer = document.getElementById('playerInfo');
+    // 模拟延迟
+    await new Promise(resolve => setTimeout(resolve, 500));
+    infoContainer.innerHTML = `
+        <div class="info-item">
+            <span class="label">玩家名称</span>
+            <span class="value">${playerName}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">权限组</span>
+            <span class="value">Owner</span>
+        </div>
+    `;
+}
+
+        async function fetchPlayerData() {
+            const infoContainer = document.getElementById('playerInfo');
+            try {
+                const response = await fetch(`${API_BASE}/api/group?player=${encodeURIComponent(playerName)}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    infoContainer.innerHTML = `
+                            <div class="info-item">
+                                <span class="label">玩家名称</span>
+                                <span class="value">${data.player || playerName}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">权限组</span>
+                                <span class="value">${data.group || 'Default'}</span>
+                            </div>
+                        `;
+                } else {
+                    infoContainer.innerHTML = `<div class="error">❌ 未找到玩家信息: ${data.error || '未知错误'}</div>`;
+                }
+            } catch (error) {
+                console.error('请求失败:', error);
+                infoContainer.innerHTML = `<div class="error">❌ 请求失败，请稍后重试。</div>`;
+            }
+        }
+
+        if (playerName && playerName !== '未知玩家') {
+            fetchPlayerData();
+        } else {
+            document.getElementById('playerInfo').innerHTML = `<div class="error">❌ 未指定玩家名称。</div>`;
+        }
+    </script>
+</body>
+</html>

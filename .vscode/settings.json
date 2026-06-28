@@ -1,0 +1,9 @@
+{
+    "liveServer.settings.root": "/",
+    "liveServer.settings.port": 5501,
+    "liveServer.settings.proxy": {
+        "enable": true,
+        "baseUri": "/player",
+        "proxyUri": "/player/index.html"
+    }
+}

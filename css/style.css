@@ -1,0 +1,298 @@
+/* ========== 全局重置 & 基础 ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #0b0d10;
+    color: #eaeef2;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========== 顶部导航栏 ========== */
+.navbar {
+    background: #14171c;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #2a2f36;
+    flex-shrink: 0;
+}
+
+.logo {
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    color: #f0f4fa;
+}
+
+    .logo span {
+        color: #6c8cff;
+    }
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+    .nav-links li {
+        cursor: pointer;
+        padding: 0.4rem 0.2rem;
+        font-weight: 500;
+        font-size: 0.95rem;
+        color: #9aa4b2;
+        transition: color 0.15s, border-bottom 0.15s;
+        border-bottom: 2px solid transparent;
+    }
+
+        .nav-links li:hover {
+            color: #f0f4fa;
+        }
+
+        .nav-links li.active {
+            color: #ffffff;
+            border-bottom-color: #6c8cff;
+        }
+
+/* ========== 主容器 ========== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    flex: 1;
+    width: 100%;
+}
+
+/* ========== 页面切换动画 ========== */
+.page {
+    display: none;
+    animation: fadeIn 0.2s ease;
+}
+
+    .page.active {
+        display: block;
+    }
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* ========== Home 页占位 ========== */
+.home-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    color: #5b6778;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+}
+
+    .home-placeholder h2 {
+        font-weight: 400;
+        font-size: 1.8rem;
+        color: #bcc6d4;
+        margin-bottom: 0.5rem;
+    }
+
+/* ========== News 页壳子 ========== */
+.news-placeholder {
+    color: #5b6778;
+    padding: 2rem 0;
+}
+
+    .news-placeholder h2 {
+        font-weight: 400;
+        color: #bcc6d4;
+    }
+
+/* ========== Player 页 ========== */
+.player-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+    .player-header h2 {
+        font-weight: 500;
+        font-size: 1.4rem;
+        color: #eaeef2;
+    }
+
+/* 搜索框 */
+.search-box {
+    display: flex;
+    gap: 0.5rem;
+    background: #1a1e25;
+    padding: 0.3rem 0.3rem 0.3rem 1rem;
+    border-radius: 40px;
+    border: 1px solid #2a2f36;
+    align-items: center;
+    transition: border 0.2s;
+}
+
+    .search-box:focus-within {
+        border-color: #6c8cff;
+    }
+
+    .search-box input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #eaeef2;
+        font-size: 0.9rem;
+        min-width: 180px;
+        padding: 0.4rem 0;
+    }
+
+        .search-box input::placeholder {
+            color: #5b6778;
+        }
+
+    .search-box button {
+        background: #6c8cff;
+        border: none;
+        color: #0b0d10;
+        font-weight: 600;
+        padding: 0.4rem 1.2rem;
+        border-radius: 40px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+        .search-box button:hover {
+            background: #7f9bff;
+        }
+
+/* ========== 权限组区块 ========== */
+.group-section {
+    margin-bottom: 2.5rem;
+}
+
+.group-title {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #242a32;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+    .group-title .badge {
+        font-size: 0.7rem;
+        background: #1e242c;
+        padding: 0.15rem 0.6rem;
+        border-radius: 20px;
+        color: #9aa4b2;
+        font-weight: 400;
+    }
+
+.player-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.6rem 1rem;
+}
+
+.player-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.45rem 0.8rem;
+    background: #13181e;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: background 0.1s;
+    border: 1px solid transparent;
+}
+
+    .player-item:hover {
+        background: #1a212a;
+        border-color: #2a313c;
+    }
+
+.player-name {
+    color: #d6dee9;
+    font-weight: 450;
+}
+
+.player-uuid {
+    color: #5b6778;
+    font-size: 0.7rem;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    background: #0f131a;
+    padding: 0.1rem 0.5rem;
+    border-radius: 12px;
+}
+
+.empty-group {
+    color: #3b4452;
+    font-size: 0.9rem;
+    padding: 0.2rem 0;
+}
+
+/* ========== 状态 & 错误消息 ========== */
+.status-message {
+    padding: 1rem 0;
+    color: #9aa4b2;
+}
+
+.error-message {
+    color: #f28b8b;
+    background: #1e1818;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border-left: 3px solid #f28b8b;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 640px) {
+    .navbar {
+        padding: 0 1rem;
+        flex-wrap: wrap;
+        height: auto;
+        gap: 0.5rem;
+        padding-top: 0.6rem;
+        padding-bottom: 0.6rem;
+    }
+
+    .nav-links {
+        gap: 1.2rem;
+        font-size: 0.9rem;
+    }
+
+    .player-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+        .search-box input {
+            flex: 1;
+            min-width: 0;
+        }
+}
