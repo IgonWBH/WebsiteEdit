@@ -1,24 +1,24 @@
 export default {
     async fetch(request, env) {
-        const url = new URL(request.url);
-        const path = url.pathname;
+        try {
+            const url = new URL(request.url);
+            const path = url.pathname;
 
-        // 只有在以下情况下才重定向到 player/index.html：
-        // 1. 路径以 /player/ 开头
-        // 2. 不是 /player/index.html 本身
-        // 3. 不是 /player/css/ 或 /player/js/ 等资源文件
-        // 4. 路径不是 /player/ (空路径)
-        const isPlayerPath = path.startsWith('/player/');
-        const isIndexHtml = path === '/player/index.html';
-        const isPlayerRoot = path === '/player/';
-        const isResourceFile = path.match(/^\/player\/.*\.(css|js|png|jpg|jpeg|gif|svg|ico|json)$/);
+            // 精确匹配：只有 /player/ 后面有内容时才重定向
+            if (path.startsWith('/player/') && path.length > 8) {
+                // 排除资源文件
+                if (!path.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|json|webp)$/)) {
+                    // 排除 index.html 本身
+                    if (path !== '/player/index.html') {
+                        return env.ASSETS.fetch(new Request('/player/index.html', request));
+                    }
+                }
+            }
 
-        if (isPlayerPath && !isIndexHtml && !isPlayerRoot && !isResourceFile) {
-            // 这是一个合法的玩家页面请求，重定向到 index.html
-            return env.ASSETS.fetch(new Request('/player/index.html', request));
+            return env.ASSETS.fetch(request);
+        } catch (error) {
+            // 如果发生错误，返回错误信息
+            return new Response('Error: ' + error.message, { status: 500 });
         }
-
-        // 其他所有请求使用默认行为
-        return env.ASSETS.fetch(request);
     }
 };
