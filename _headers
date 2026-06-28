@@ -1,6 +1,7 @@
-/* 
+# 所有页面
+/*
   X-Robots-Tag: noindex
-*/
 
+# player 页面
 /player/*
   X-Robots-Tag: noindex
