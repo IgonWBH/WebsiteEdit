@@ -3,12 +3,12 @@ export default {
         const url = new URL(request.url);
         const path = url.pathname;
 
-        // 如果是 /player/ 开头的请求，且不是 /player/index.html
-        if (path.startsWith('/player/') && !path.includes('/player/index.html')) {
-            // 直接返回 player/index.html 的内容
+        // 如果是 /player/ 开头的请求，返回 player/index.html
+        if (path.startsWith('/player/')) {
             return env.ASSETS.fetch(new Request('/player/index.html', request));
         }
 
+        // 其他请求正常处理
         return env.ASSETS.fetch(request);
     }
 };
