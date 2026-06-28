@@ -78,73 +78,58 @@
     </div>
 
     <script>
-        function getPlayerNameFromPath() {
-            const path = window.location.pathname;
-            // 匹配 /player/ 后面的部分，忽略 index.html 和查询参数
-            const match = path.match(/^\/player\/(.+?)(?:\?|$)/);
-            if (match && match[1] && match[1] !== 'index.html') {
-                return decodeURIComponent(match[1]);
+    // 从 URL 路径中提取玩家名 - 简化版
+    function getPlayerNameFromPath() {
+        const path = window.location.pathname;
+        // 匹配 /player/ 后面的所有内容
+        const match = path.match(/^\/player\/(.+)/);
+        if (match && match[1]) {
+            // 如果是 index.html，不算玩家名
+            if (match[1] === 'index.html') {
+                return null;
             }
-            // 兼容旧方式：如果 URL 是 /player/index.html?player=xxx
-            const params = new URLSearchParams(window.location.search);
-            if (params.has('player')) {
-                return params.get('player');
+            return decodeURIComponent(match[1]);
+        }
+        return null;
+    }
+
+    const playerName = getPlayerNameFromPath() || '未知玩家';
+    document.getElementById('playerName').textContent = `👤 ${playerName}`;
+
+    // ⚠️ 替换为你的真实 API 地址
+    const API_BASE = 'https://api.cnolm.dpdns.org';
+
+    async function fetchPlayerData() {
+        const infoContainer = document.getElementById('playerInfo');
+        try {
+            const response = await fetch(`${API_BASE}/api/group?player=${encodeURIComponent(playerName)}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                infoContainer.innerHTML = `
+                    <div class="info-item">
+                        <span class="label">玩家名称</span>
+                        <span class="value">${data.player || playerName}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">权限组</span>
+                        <span class="value">${data.group || 'Default'}</span>
+                    </div>
+                `;
+            } else {
+                infoContainer.innerHTML = `<div class="error">❌ 未找到玩家信息: ${data.error || '未知错误'}</div>`;
             }
-            return null;
+        } catch (error) {
+            console.error('请求失败:', error);
+            infoContainer.innerHTML = `<div class="error">❌ 请求失败，请稍后重试。</div>`;
         }
+    }
 
-        const playerName = getPlayerNameFromPath() || '未知玩家';
-        document.getElementById('playerName').textContent = `👤 ${playerName}`;
-
-        // ⚠️ 替换为你的真实 API 地址
-        const API_BASE = 'https://api.cnolm.dpdns.org';
-        async function fetchPlayerData() {
-    const infoContainer = document.getElementById('playerInfo');
-    // 模拟延迟
-    await new Promise(resolve => setTimeout(resolve, 500));
-    infoContainer.innerHTML = `
-        <div class="info-item">
-            <span class="label">玩家名称</span>
-            <span class="value">${playerName}</span>
-        </div>
-        <div class="info-item">
-            <span class="label">权限组</span>
-            <span class="value">Owner</span>
-        </div>
-    `;
-}
-
-        async function fetchPlayerData() {
-            const infoContainer = document.getElementById('playerInfo');
-            try {
-                const response = await fetch(`${API_BASE}/api/group?player=${encodeURIComponent(playerName)}`);
-                const data = await response.json();
-
-                if (response.ok) {
-                    infoContainer.innerHTML = `
-                            <div class="info-item">
-                                <span class="label">玩家名称</span>
-                                <span class="value">${data.player || playerName}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="label">权限组</span>
-                                <span class="value">${data.group || 'Default'}</span>
-                            </div>
-                        `;
-                } else {
-                    infoContainer.innerHTML = `<div class="error">❌ 未找到玩家信息: ${data.error || '未知错误'}</div>`;
-                }
-            } catch (error) {
-                console.error('请求失败:', error);
-                infoContainer.innerHTML = `<div class="error">❌ 请求失败，请稍后重试。</div>`;
-            }
-        }
-
-        if (playerName && playerName !== '未知玩家') {
-            fetchPlayerData();
-        } else {
-            document.getElementById('playerInfo').innerHTML = `<div class="error">❌ 未指定玩家名称。</div>`;
-        }
-    </script>
+    if (playerName && playerName !== '未知玩家') {
+        fetchPlayerData();
+    } else {
+        document.getElementById('playerInfo').innerHTML = `<div class="error">❌ 未指定玩家名称。</div>`;
+    }
+</script>
 </body>
 </html>
