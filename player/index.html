@@ -78,22 +78,23 @@
     </div>
 
     <script>
-    // 从 URL 路径中提取玩家名 - 简化版
-    function getPlayerNameFromPath() {
+    // 从 URL 中提取玩家名
+    function getPlayerName() {
+        // 1. 优先从查询参数获取 ?player=xxx
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('player')) {
+            return params.get('player');
+        }
+        // 2. 如果没有查询参数，从路径中提取
         const path = window.location.pathname;
-        // 匹配 /player/ 后面的所有内容
         const match = path.match(/^\/player\/(.+)/);
-        if (match && match[1]) {
-            // 如果是 index.html，不算玩家名
-            if (match[1] === 'index.html') {
-                return null;
-            }
+        if (match && match[1] && match[1] !== 'index.html') {
             return decodeURIComponent(match[1]);
         }
         return null;
     }
 
-    const playerName = getPlayerNameFromPath() || '未知玩家';
+    const playerName = getPlayerName() || '未知玩家';
     document.getElementById('playerName').textContent = `👤 ${playerName}`;
 
     // ⚠️ 替换为你的真实 API 地址

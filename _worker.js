@@ -8,11 +8,13 @@ export default {
             if (path.startsWith('/player/') && path !== '/player/') {
                 // 排除资源文件
                 if (!path.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|json|webp)$/)) {
-                    // 排除 index.html 本身
                     if (path !== '/player/index.html') {
-                        // 重写请求到 /player/index.html，保留查询参数
+                        // 提取玩家名
+                        const playerName = path.replace('/player/', '');
+                        // 构造新 URL，将玩家名作为查询参数
                         const newUrl = new URL(request.url);
                         newUrl.pathname = '/player/index.html';
+                        newUrl.search = `?player=${encodeURIComponent(playerName)}`;
                         const newRequest = new Request(newUrl, request);
                         return env.ASSETS.fetch(newRequest);
                     }
